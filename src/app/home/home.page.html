@@ -1,0 +1,29 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+    <ion-title>HOME:  {{ userName }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">Cerrar sesión</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding cities-list background-image">
+  <div *ngFor="let city of cities" class="city-button">
+    <ion-button fill="clear" expand="block" (click)="onCityClick(city.name)" class="city-bg" [style.background-image]="'url(' + city.image + ')'">
+      <span class="city-name">{{ city.name }}</span>
+    </ion-button>
+  </div>
+
+
+  <ion-button fill="clear" expand="block" (click)="onNearbyClick()" class="city-bg ">
+    <span class="city-name">Cerca de mí</span>
+  </ion-button>
+
+    
+</ion-content>
+
+
+  

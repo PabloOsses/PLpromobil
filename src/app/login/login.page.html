@@ -1,0 +1,39 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding background-image login-form">
+  <div class="app-logo">
+    <!-- Aquí el logo -->
+    <img src="assets/logo_v1.png" alt="App Logo" border-radius="50px" />
+    
+  </div>
+  
+  <ion-text color="danger" *ngIf="invalidLogin" class="error-message">
+    <p>Usuario o contraseña no válidos. Inténtalo de nuevo.</p>
+  </ion-text>
+
+  <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+    <ion-item>
+      <ion-label position="floating">Email</ion-label>
+      <ion-input formControlName="email" type="text" required></ion-input>
+    </ion-item>
+    
+
+    <ion-item>
+      <ion-label position="floating">Contraseña</ion-label>
+      <ion-input formControlName="password" type="password" required></ion-input>
+    </ion-item>
+    
+
+    <ion-button expand="block" type="submit" [disabled]="loginForm.invalid">Iniciar Sesión</ion-button>
+  </form>
+
+  <ion-button expand="block" color="secondary" (click)="goToRegister()">Registrarse</ion-button>
+
+</ion-content>
+
+
+

@@ -1,0 +1,119 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/"></ion-back-button>
+    </ion-buttons>
+    <ion-title>DETALLE</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="background-image">
+  <div class="image-container" (click)="toggleFlip()">
+    <!-- Imagen de lugar histórico -->
+    <div [ngClass]="{'flipped': isFlipped}" class="image-wrapper">
+      <img [src]="imageUrl" alt="Nombre de la imagen" class="custom-image" />
+      <div class="image-description">
+        <p>{{ description }}</p>
+      </div>
+    </div>
+    <!-- Nombre del lugar histórico en el borde inferior de la imagen -->
+    <div class="image-name">
+      {{ attractionName }}
+    </div>
+  </div>
+  
+  <div class="geolocation-info" *ngIf="isFlipped">
+    <p><strong>Tu ubicación:</strong></p>
+    <p>Latitud: {{ userLatitude }}</p>
+    <p>Longitud: {{ userLongitude }}</p>
+  </div>
+  
+  <ion-card *ngIf="isFlipped">
+    <ion-card-header>
+      <ion-card-title>Tiempo estimado de viaje</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p>En los tiempos antiguos un viaje en carreta a {{ attractionName }} hubiera durado {{ estimatedDays }} días desde tu posición actual</p>
+    </ion-card-content>
+  </ion-card>
+
+  <!-- Sección de comentarios de los usuarios -->
+  <div class="comments-section">
+    <h2>Comentarios</h2>
+    <ion-list>
+      <ion-item *ngFor="let comentario of currentComentarios">
+        <!-- Nombre de usuario y texto del comentario -->
+        <ion-label>
+          <img *ngIf="comentario.imagen" [src]="comentario.imagen" alt="Imagen del comentario" class="comment-image" />
+          <p class="comment-user-name"><strong>{{ comentario.usuario }}:</strong></p>
+          <p *ngIf="!comentario.isEditing">{{ comentario.texto }}</p>
+          <ion-input
+            *ngIf="comentario.isEditing"
+            [(ngModel)]="comentario.texto"
+            placeholder="Edita tu comentario"
+          ></ion-input>
+        </ion-label>
+  
+        <!-- Botones de acción -->
+        <ion-buttons slot="end">
+          <ion-button color="danger" *ngIf="comentario.usuario === userName" (click)="deleteComment(comentario.key, comentario)">
+            <ion-icon name="trash"></ion-icon>
+          </ion-button>
+          <ion-button color="secondary" *ngIf="!comentario.isEditing && comentario.usuario === userName" (click)="editComment(comentario)">
+            <ion-icon name="create"></ion-icon>
+          </ion-button>
+          <ion-button color="success" *ngIf="comentario.isEditing" (click)="submitEdit(comentario)">
+            <ion-icon name="checkmark"></ion-icon>
+          </ion-button>
+
+          <!-- Botón verde de imagen adjunta (solo si el comentario tiene imagen) -->
+          <!-- YA NO ES UTILIZADO
+          <ion-button color="success" *ngIf="comentario.imagen" title="Comentario con imagen">
+            <ion-icon name="image"></ion-icon>
+          </ion-button>-->
+        </ion-buttons>
+      </ion-item>
+    </ion-list>
+  
+    <!-- Campo de entrada y botón para agregar un comentario -->
+    <div class="add-comment-input" *ngIf="isAddingComment">
+      <ion-input [(ngModel)]="newCommentText" placeholder="Escribe tu comentario aquí"></ion-input>
+      <ion-button (click)="addImage()">
+        <ion-icon name="camera"></ion-icon> 
+      </ion-button>
+
+      <img *ngIf="attachedImage" [src]="attachedImage" alt="Vista previa de la imagen" class="preview-image" />
+
+      <ion-button class="circular-button" (click)="submitComment()">
+        <ion-icon slot="icon-only" name="paper-plane"></ion-icon>
+      </ion-button>
+    </div>
+  </div> 
+
+  <!-- Botón para mostrar el campo de entrada de comentario -->
+  <div class="add-comment-button" *ngIf="!isAddingComment">
+    <ion-button fill="clear" (click)="showCommentInput()">
+      <ion-icon name="add-circle-outline"></ion-icon>
+    </ion-button>
+  </div>
+
+  <!-- Vista emergente para mostrar la imagen -->
+  <div class="image-modal" *ngIf="selectedImage">
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Imagen adjunta</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="selectedImage = ''">
+            <ion-icon name="close"></ion-icon>
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <div class="image-modal-content">
+        <!-- Hacer clic en la imagen cierra el modal -->
+        <img [src]="selectedImage" alt="Imagen adjunta" class="modal-image" (click)="selectedImage = ''" />
+      </div>
+    </ion-content>
+  </div>
+</ion-content>
